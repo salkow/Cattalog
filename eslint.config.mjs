@@ -163,10 +163,15 @@ export default [ ...compat.extends(
     'no-nested-ternary': [ 'off' ],
     'no-underscore-dangle': [ 'off' ],
 
-    'no-unused-vars': [ 'error', {
-      args: 'none',
-      varsIgnorePattern: '^_',
-    }],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        'argsIgnorePattern': '^_',
+        'varsIgnorePattern': '^_',
+        'caughtErrorsIgnorePattern': '^_'
+      }
+    ],
 
     'object-curly-newline': [ 'error', {
       consistent: true,

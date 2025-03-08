@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 
 const CatImages = lazy(() => { return import('./pages/CatImages/CatImages'); });
 const CatBreeds = lazy(() => { return import('./pages/CatBreeds/CatBreeds'); });
-const FavouriteCats = lazy(() => { return import('./pages/FavouriteCats'); });
+const FavouriteCats = lazy(() => { return import('./pages/FavouriteCats/FavouriteCats'); });
 
 const AppRouter: React.FC = function () {
   return (
