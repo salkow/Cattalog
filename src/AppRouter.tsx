@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 
-const AllCats = lazy(() => { return import('./pages/AllCats'); });
+const AllCats = lazy(() => { return import('./pages/AllCats/AllCats'); });
 const CatBreeds = lazy(() => { return import('./pages/CatBreeds'); });
 const FavouriteCats = lazy(() => { return import('./pages/FavouriteCats'); });
 
