@@ -19,7 +19,7 @@ const App: React.FC = function () {
     <QueryClientProvider client={ queryClient }>
       <ReactQueryDevtools initialIsOpen={ false } buttonPosition='bottom-left' />
       <div className='max-w-7xl max-h-auto ml-auto mr-auto mt-4'>
-        <AppRouter/>
+        <AppRouter />
       </div>
     </QueryClientProvider>
   )

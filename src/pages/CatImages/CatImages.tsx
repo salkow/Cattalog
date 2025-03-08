@@ -2,12 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import React from 'react'
 import { request } from '../../utilities/apiClient'
 import SingleCat from './SingleCat'
+import { CatImage } from '../../types/cat-types'
 
-const AllCats: React.FC = function () {
+const CatImages: React.FC = function () {
   const { data: cats, isLoading: catsLoading } = useQuery({
     queryKey: [ 'cats' ],
     queryFn: () => {
-      return request.get('images/search?limit=10');
+      return request.get<CatImage[]>('images/search?limit=10');
     }
   })
 
@@ -19,11 +20,11 @@ const AllCats: React.FC = function () {
     <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4'>
       {
         cats.map((cat) => {
-          return <SingleCat key={ cat.id } src={ cat.url }/>
+          return <SingleCat key={ cat.id } { ...cat }/>
         })
       }
     </div>
   )
 }
 
-export default AllCats
+export default CatImages
