@@ -1,12 +1,16 @@
+import React, { memo } from 'react';
 import { useAddToFavourites, useRemoveFromFavourites } from '../FavouriteCats/hooks';
+import { SelectedImage } from '../../types/cat-types';
 
 interface ISingleCatProps {
-  url: string
-  id: string
   favouriteId: number | undefined
+  selectImage?: (cat: SelectedImage) => void
+  id: string
+  url: string
+  className?: React.HTMLProps<HTMLElement>['className'];
 }
 
-const SingleCat: React.FC<ISingleCatProps> = function ({ url, id, favouriteId }) {
+const SingleCat: React.FC<ISingleCatProps> = function ({ selectImage, favouriteId, id, url, className }) {
   const removeFavouriteCat = useRemoveFromFavourites();
   const makeFavourite = useAddToFavourites();
 
@@ -20,9 +24,9 @@ const SingleCat: React.FC<ISingleCatProps> = function ({ url, id, favouriteId })
   };
 
   return (
-    <form className='relative' onSubmit={ handleSubmit }>
+    <form className={ `relative ${ className ?? '' }` } onSubmit={ handleSubmit }>
       <button
-        className='absolute right-[10px] top-[10px] cursor-pointer'
+        className='absolute left-3 top-3 cursor-pointer'
         type='submit'
       >
         <img
@@ -36,10 +40,12 @@ const SingleCat: React.FC<ISingleCatProps> = function ({ url, id, favouriteId })
       <img
         src={ url }
         alt={ url }
-        className='w-full h-full mb-4 rounded-xl outline-stone-500/50 outline shadow-lg'
+        className='w-full h-full rounded-xl outline-stone-500/50 outline shadow-lg cursor-pointer'
+        onClick={ () => { selectImage?.({ id: id, url: url });} }
       />
     </form>
   );
 };
 
-export default SingleCat;
+// memo to avoid rerender when the favourite images are updated.
+export default memo(SingleCat);

@@ -79,3 +79,6 @@ export interface FavouriteCat {
       url: string
   }
 }
+
+
+export type SelectedImage = { id: CatImage['id']; url: CatImage['url']; };
