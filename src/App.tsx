@@ -9,8 +9,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      gcTime: 1000 * 60, // garbage collect old queries.
-      staleTime: 1000 * 15, // refetch if re-mounted after this period. Does not refresh if still mounted.
+      gcTime: 1000 * 60 * 5, // garbage collect old queries.
+      staleTime: Infinity, // refetch if re-mounted after this period. Does not refresh if still mounted.
       refetchOnMount: true, // if false, the query will not refetch even if it is stale, unless it is also removed from cache
     },
   },

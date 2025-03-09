@@ -40,7 +40,7 @@ const SingleCat: React.FC<ISingleCatProps> = function ({ selectImage, favouriteI
       <img
         src={ url }
         alt={ url }
-        className='w-full h-full rounded-xl outline-stone-500/50 outline shadow-lg cursor-pointer max-h-[calc(100vh-100px)]'
+        className='w-full h-full rounded-xl outline-stone-500/50 outline shadow-lg cursor-pointer max-h-[calc(100vh-5vh)]'
         onClick={ () => { selectImage?.({ id: id, url: url });} }
       />
     </form>
