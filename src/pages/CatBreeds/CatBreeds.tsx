@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query'
-import React from 'react'
-import { request } from '../../utilities/apiClient'
-import { Breed } from '../../types/cat-types'
-import SingleBreed from './SingleBreed'
+import { useQuery } from '@tanstack/react-query';
+import React from 'react';
+import { request } from '../../utilities/apiClient';
+import { Breed } from '../../types/cat-types';
+import SingleBreed from './SingleBreed';
 
 const CatImages: React.FC = function () {
   const { data: breeds, isLoading: breedsLoading } = useQuery({
@@ -10,7 +10,7 @@ const CatImages: React.FC = function () {
     queryFn: () => {
       return request.get<Breed[]>('breeds?limit=10');
     }
-  })
+  });
 
   if (breedsLoading || !breeds) {
     return null;
@@ -26,7 +26,7 @@ const CatImages: React.FC = function () {
         })
       }
     </div>
-  )
-}
+  );
+};
 
-export default CatImages
+export default CatImages;

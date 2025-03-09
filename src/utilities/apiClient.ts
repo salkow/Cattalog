@@ -25,11 +25,11 @@ async function requestClient<T>(endpoint: string, options: RequestClientOptions)
     })
     .catch((error) => {
       throw error;
-    })
+    });
 }
 
 export const request = {
-  get: <T>(endpoint: string) => { return requestClient<T>(endpoint, { method: 'GET' }) },
-  post: <T>(endpoint: string, data?: unknown) => { return requestClient<T>(endpoint, { method: 'POST', data }) },
-  delete: <T>(endpoint: string) => { return requestClient<T>(endpoint, { method: 'DELETE' }) },
-}
+  get: <T>(endpoint: string) => { return requestClient<T>(endpoint, { method: 'GET' }); },
+  post: <T>(endpoint: string, data?: unknown) => { return requestClient<T>(endpoint, { method: 'POST', data }); },
+  delete: <T>(endpoint: string) => { return requestClient<T>(endpoint, { method: 'DELETE' }); },
+};

@@ -15,7 +15,7 @@ const AppRouter: React.FC = function () {
         <Route path='/favourites' element={ <FavouriteCats /> } />
       </Routes>
     </BrowserRouter>
-  )
-}
+  );
+};
 
 export default AppRouter;

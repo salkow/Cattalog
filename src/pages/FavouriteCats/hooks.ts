@@ -19,7 +19,7 @@ export const useRemoveFromFavourites = (): RemoveFromFavouritesMutation => {
 
   return useMutation({
     mutationFn: ({ favouriteId }) => {
-      return request.delete(`favourites/${ favouriteId }`)
+      return request.delete(`favourites/${ favouriteId }`);
     },
     onMutate: async ({ imageId }) => {
       // Cancel any ongoing queries
@@ -35,7 +35,7 @@ export const useRemoveFromFavourites = (): RemoveFromFavouritesMutation => {
       return { previousFavouriteCats };
     },
     onError: (err, _newTodo, context) => {
-      console.error('error', err)
+      console.error('error', err);
       if (context) {
         // Rollback to the previous value
         queryClient.setQueryData<FavouriteCatsQueryData>([ 'favourite-cats' ], context.previousFavouriteCats);
@@ -58,12 +58,12 @@ export const useAddToFavourites = (): AddToFavouritesMutation => {
         id: imageId,
         url
       }
-    }
-  }
+    };
+  };
 
   return useMutation<FavouriteCat, Error, { imageId: string, url: string }, { previousFavouriteCats: FavouriteCatsQueryData | undefined }>({
     mutationFn: ({ imageId }) => {
-      return request.post('favourites', { image_id: imageId, sub_id: import.meta.env.VITE_USERNAME })
+      return request.post('favourites', { image_id: imageId, sub_id: import.meta.env.VITE_USERNAME });
     },
     onMutate: async ({ imageId, url }) => {
       // Cancel any ongoing queries
@@ -81,7 +81,7 @@ export const useAddToFavourites = (): AddToFavouritesMutation => {
       return { previousFavouriteCats };
     },
     onError: (err, _newTodo, context) => {
-      console.error('error', err)
+      console.error('error', err);
       if (context) {
         // Rollback to the previous value
         queryClient.setQueryData<FavouriteCatsQueryData>([ 'favourite-cats' ], context.previousFavouriteCats);
@@ -106,9 +106,9 @@ export const useGetFavouriteCats = (): UseQueryResult<FavouriteCatsQueryData, Er
       return request.get<FavouriteCat[]>(`favourites?sub_id=${ import.meta.env.VITE_USERNAME }`)
         .then((response) => {
           return response.reduce((a, v) => {
-            return { ...a, [v.image_id]: v }
+            return { ...a, [v.image_id]: v };
           }, {}) as FavouriteCatsQueryData;
-        })
+        });
     }
-  })
-}
+  });
+};

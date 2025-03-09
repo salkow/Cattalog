@@ -1,7 +1,7 @@
-import React from 'react'
-import AppRouter from './AppRouter'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import React from 'react';
+import AppRouter from './AppRouter';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -12,7 +12,7 @@ const queryClient = new QueryClient({
       refetchOnMount: true, // if false, the query will not refetch even if it is stale, unless it is also removed from cache
     },
   },
-})
+});
 
 const App: React.FC = function () {
   return (
@@ -22,7 +22,7 @@ const App: React.FC = function () {
         <AppRouter />
       </div>
     </QueryClientProvider>
-  )
-}
+  );
+};
 
-export default App
+export default App;

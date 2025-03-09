@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import { Breed } from '../../types/cat-types';
 
 const SingleBreed: React.FC<Breed> = function ({ image, name ,description }) {
   if (!image?.url) {
-    console.log('null')
+    console.log('null');
     return null;
   }
 
@@ -15,7 +15,7 @@ const SingleBreed: React.FC<Breed> = function ({ image, name ,description }) {
         <p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>{description}</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default SingleBreed;

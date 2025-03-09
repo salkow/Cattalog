@@ -204,7 +204,7 @@ export default [ ...compat.extends(
       when: 'always',
     }],
 
-    // "@typescript-eslint/semi": ["error", "always"],
+    'semi': [ 'error', 'always' ],
     'react/prop-types': [ 'off' ],
     'react/require-default-props': [ 'off' ],
     'space-before-blocks': [ 'error', 'always' ],

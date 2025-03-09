@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 import SingleCat from '../CatImages/SingleCat';
 import { useGetFavouriteCats } from './hooks';
 
 const FavoriteCats: React.FC = function () {
 
-  const { data: favouriteCats, isLoading: favouriteCatsLoading } = useGetFavouriteCats()
+  const { data: favouriteCats, isLoading: favouriteCatsLoading } = useGetFavouriteCats();
 
   if (favouriteCatsLoading || !favouriteCats) {
     return null;
@@ -22,11 +22,11 @@ const FavoriteCats: React.FC = function () {
                 favouriteId={ favCat.id }
                 url={ favCat.image.url }
               />
-            )
+            );
           })
       }
     </div>
-  )
-}
+  );
+};
 
-export default FavoriteCats
+export default FavoriteCats;
