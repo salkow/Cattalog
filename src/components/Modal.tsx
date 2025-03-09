@@ -43,7 +43,7 @@ const Modal: React.FC<IModalProps> = ({ children, open, handleClose }) => {
         ref={ dialogContentRef }
         onClick={ handleDialogContentClick }
         className='fixed inset-0 flex items-center justify-center'>
-        <div className='bg-white rounded-xl shadow-lg max-w-max w-full mx-4 border border-gray-200 relative h-fit'>
+        <div className='bg-white rounded-xl shadow-lg max-w-max w-full mx-4 border border-gray-200 relative h-fit max-h-screen'>
           <button
             onClick={ internalHandleCloseDialog }
             className='text-gray-400 hover:text-gray-600 transition-colors cursor-pointer absolute right-3 top-3 z-1'
@@ -62,9 +62,9 @@ const Modal: React.FC<IModalProps> = ({ children, open, handleClose }) => {
               />
             </svg>
           </button>
-          <p>
+          <div>
             {children}
-          </p>
+          </div>
         </div>
       </div>
     </dialog>
