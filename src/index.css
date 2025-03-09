@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@theme {
+  --color-navbar-dark: #0a1929;
+  --color-navbar: #2196F3;
+
+  --color-layout-dark: #001e3c;
+  --color-layout: #E7EBF0;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
