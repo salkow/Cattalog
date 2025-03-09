@@ -11,7 +11,7 @@ const CatImages: React.FC = function () {
   const { data: cats, isLoading: catsLoading } = useQuery({
     queryKey: [ 'cats' ],
     queryFn: () => {
-      return request.get<CatImage[]>('images/search?limit=10');
+      return request.get<CatImage[]>('images/search?limit=10&include_categories=0');
     }
   });
 
@@ -20,7 +20,7 @@ const CatImages: React.FC = function () {
   const [ moreImagesLoading, setMoreImagesLoading ] = useState(false);
   const loadMoreImages = (): void => {
     setMoreImagesLoading(true);
-    request.get<CatImage[]>('images/search?limit=10').then((dd) => {
+    request.get<CatImage[]>('images/search?limit=10&include_categories=0').then((dd) => {
       return queryClient.setQueryData([ 'cats' ], (old: CatImage[] | undefined) => {
         return [ ...(old ?? []), ...dd ];
       });
