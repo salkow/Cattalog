@@ -8,7 +8,7 @@ const CatImages: React.FC = function () {
   const { data: breeds, isLoading: breedsLoading } = useQuery({
     queryKey: [ 'breeds' ],
     queryFn: () => {
-      return request.get<Breed[]>('breeds?limit=10');
+      return request.get<Breed[]>('breeds');
     }
   });
 
