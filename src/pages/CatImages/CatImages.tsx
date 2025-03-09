@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { request } from '../../utilities/apiClient';
 import SingleCat from './SingleCat';
 import { CatImage, SelectedImage } from '../../types/cat-types';
 import { useGetFavouriteCats } from '../FavouriteCats/hooks';
-import Modal from '../../components/Modal';
 import LoadingButton from '../../components/LoadingButton';
+import CatImageModal from '../../components/CatImageModal';
+import { useSearchParams } from 'react-router';
 
 const CatImages: React.FC = function () {
   const { data: cats, isLoading: catsLoading } = useQuery({
@@ -16,6 +17,7 @@ const CatImages: React.FC = function () {
   });
 
   const queryClient = useQueryClient();
+  const [ currentQueryParameters ] = useSearchParams();
 
   const [ moreImagesLoading, setMoreImagesLoading ] = useState(false);
   const loadMoreImages = (): void => {
@@ -45,6 +47,20 @@ const CatImages: React.FC = function () {
   const deselectImage = useCallback((): void => {
     setSelectedImage(undefined);
   }, []);
+
+  useEffect(() => {
+    const url = currentQueryParameters.get('url');
+    const id = currentQueryParameters.get('id');
+    if (url && id) {
+      setSelectedImage({
+        id,
+        url: decodeURIComponent(url)
+      });
+    }
+
+    // no need to run every time the query params change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ ]);
 
   // Inside useMemo to avoid children rerender when the selected image changes
   const SingleCats = useMemo(() => {
@@ -76,16 +92,13 @@ const CatImages: React.FC = function () {
     <>
       {
         selectedImage && (
-          <Modal
+          <CatImageModal
             open={ selectedImage !== undefined }
             handleClose={ deselectImage }
-          >
-            <SingleCat
-              id={ selectedImage.id }
-              url={ selectedImage.url }
-              favouriteId={ favouriteCats?.[selectedImage.id]?.id }
-            />
-          </Modal>
+            id={ selectedImage.id }
+            url={ selectedImage.url }
+            favouriteId={ favouriteCats?.[selectedImage.id]?.id }
+          />
         )
       }
 

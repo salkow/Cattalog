@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import SingleCat from '../CatImages/SingleCat';
 import { useGetFavouriteCats } from './hooks';
 import { SelectedImage } from '../../types/cat-types';
-import Modal from '../../components/Modal';
+import CatImageModal from '../../components/CatImageModal';
+import { useSearchParams } from 'react-router';
 
 const FavoriteCats: React.FC = function () {
 
@@ -17,6 +18,22 @@ const FavoriteCats: React.FC = function () {
   const deselectImage = useCallback((): void => {
     setSelectedImage(undefined);
   }, []);
+
+
+  const [ currentQueryParameters ] = useSearchParams();
+  useEffect(() => {
+    const url = currentQueryParameters.get('url');
+    const id = currentQueryParameters.get('id');
+    if (url && id) {
+      setSelectedImage({
+        id,
+        url: decodeURIComponent(url)
+      });
+    }
+
+    // no need to run every time the query params change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ ]);
 
   // Inside useMemo to avoid children rerender when the selected image changes
   const SingleCats = useMemo(() => {
@@ -52,16 +69,13 @@ const FavoriteCats: React.FC = function () {
     <>
       {
         selectedImage && (
-          <Modal
+          <CatImageModal
             open={ selectedImage !== undefined }
             handleClose={ deselectImage }
-          >
-            <SingleCat
-              id={ selectedImage.id }
-              url={ selectedImage.url }
-              favouriteId={ favouriteCats?.[selectedImage.id]?.id }
-            />
-          </Modal>
+            id={ selectedImage.id }
+            url={ selectedImage.url }
+            favouriteId={ favouriteCats?.[selectedImage.id]?.id }
+          />
         )
       }
 
