@@ -11,9 +11,7 @@ const ClickAwayListener: React.FC<IClickAwayListenerProps> = function ({ childre
 
   useEffect(() => {
     const handleClick = (event: MouseEvent): void => {
-      console.log('enabled', enabled);
       if (enabled && ref.current && event.target instanceof Node && !ref.current.contains(event.target)) {
-        console.log('click away');
         onClickAway();
       }
     };

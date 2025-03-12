@@ -5,7 +5,6 @@ const setDarkColorScheme = (): void => {
 };
 
 const setLightColorScheme = (): void => {
-  console.log('here');
   localStorage.theme = 'light';
   document.body.setAttribute('data-theme', 'light');
   document.documentElement.classList.remove('dark');
@@ -26,4 +25,13 @@ export const toggleColorScheme = (): void => {
   } else {
     setDarkColorScheme();
   }
+};
+
+export const removeDuplicates = <T extends Record<K, unknown>, K extends keyof T>
+  (arr: T[], key: K = 'id' as K): T[] => {
+  const seen = new Set<T[K]>();
+  return arr.filter((obj) => {
+    const identifier = obj[key];
+    return seen.has(identifier) ? false : seen.add(identifier);
+  });
 };

@@ -3,14 +3,14 @@ interface Weight {
   metric: string
 }
 
-export interface BreedImage {
+export interface CatBreedImage {
   id: string
   width: number
   height: number
   url: string
 }
 
-export interface Breed {
+export interface CatBreed {
   weight: Weight
   id: string
   name: string
@@ -48,7 +48,7 @@ export interface Breed {
   wikipedia_url?: string
   hypoallergenic: number
   reference_image_id?: string
-  image?: BreedImage
+  image?: CatBreedImage
   cat_friendly?: number
   bidability?: number
 }
@@ -59,14 +59,13 @@ interface Category {
 }
 
 export interface CatImage {
-  breeds: Breed[]
+  breeds?: CatBreed[]
   categories?: Category[]
   id: string
   url: string
   width: number
   height: number
 }
-
 
 export interface FavouriteCat {
   id: number
@@ -80,5 +79,20 @@ export interface FavouriteCat {
   }
 }
 
+export type SelectedImage = {
+  id: CatImage['id'];
+  url: CatImage['url'];
+  breeds?: CatBreed[] | undefined
+  hasAllInfo: boolean
+};
 
-export type SelectedImage = { id: CatImage['id']; url: CatImage['url']; };
+// Posibly not a good idea. Wanted to keep the CatBreed type in the SelectedBreed.
+type DeepPartial<T> = T extends object ? {
+    [P in keyof T]?: DeepPartial<T[P]>;
+} : T;
+
+export interface SelectedBreed extends DeepPartial<CatBreed> {
+  id: CatBreed['id'];
+  name: CatBreed['name']
+  hasAllInfo: boolean
+}

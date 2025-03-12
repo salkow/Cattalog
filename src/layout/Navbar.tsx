@@ -10,10 +10,6 @@ const Navbar: React.FC = function () {
     setIsMobileOpen((prev) => {return !prev;});
   };
 
-  useEffect(() =>{
-    console.log('isMobileOpen:', isMobileOpen);
-  }, [ isMobileOpen ]);
-
   const location = useLocation();
 
   useEffect(() => {

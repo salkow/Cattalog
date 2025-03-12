@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AppRouter from './AppRouter';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { initializeColorScheme } from './utilities/toggleColorScheme';
+import { initializeColorScheme } from './utilities/utils';
 
 
 const queryClient = new QueryClient({

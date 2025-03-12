@@ -1,42 +1,30 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { request } from '../../utilities/apiClient';
+import React, { useCallback, useMemo, useState } from 'react';
 import SingleCat from './SingleCat';
-import { CatImage, SelectedImage } from '../../types/cat-types';
+import type { CatImage, SelectedImage } from '../../types/cat-types';
 import { useGetFavouriteCats } from '../FavouriteCats/hooks';
 import LoadingButton from '../../components/LoadingButton';
-import CatImageModal from '../../components/CatImageModal';
+import CatImageModal from './CatImageModal';
+import Spinner from '../../components/Spinner';
+import { useGetCatImages, useGetMoreCatImages } from './hooks';
+import { useSetImageInfoFromUrl } from '../../utilities/hooks';
 import { useSearchParams } from 'react-router';
 
 const CatImages: React.FC = function () {
-  const { data: cats, isLoading: catsLoading } = useQuery({
-    queryKey: [ 'cats' ],
-    queryFn: () => {
-      return request.get<CatImage[]>('images/search?limit=10&include_categories=0');
-    }
-  });
+  const { data: cats, isLoading: catsLoading } = useGetCatImages();
 
-  const queryClient = useQueryClient();
-  const [ currentQueryParameters ] = useSearchParams();
+  const [ _, setSearchParams ] = useSearchParams();
 
   const [ moreImagesLoading, setMoreImagesLoading ] = useState(false);
-  const loadMoreImages = (): void => {
+  const getMoreImage = useGetMoreCatImages();
+
+  const loadMoreImages = (): Promise<CatImage[] | undefined> => {
     setMoreImagesLoading(true);
-    request.get<CatImage[]>('images/search?limit=10&include_categories=0').then((dd) => {
-      return queryClient.setQueryData([ 'cats' ], (old: CatImage[] | undefined) => {
-        return [ ...(old ?? []), ...dd ];
-      });
-    })
-      .finally(() => {
-        setMoreImagesLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-    ;
+    return getMoreImage()
+      .finally(() => { setMoreImagesLoading(false); });
   };
 
-  const { data: favouriteCats } = useGetFavouriteCats();
+  // Fetch favourites cats here and  not in component to avoid rerender when favouriteCats changes.
+  const { data: favouriteCats, isLoading: favouriteCatsLoading } = useGetFavouriteCats();
 
   const [ selectedImage, setSelectedImage ] = useState<SelectedImage | undefined>();
 
@@ -45,22 +33,11 @@ const CatImages: React.FC = function () {
   }, []);
 
   const deselectImage = useCallback((): void => {
+    setSearchParams({});
     setSelectedImage(undefined);
-  }, []);
+  }, [ setSearchParams ]);
 
-  useEffect(() => {
-    const url = currentQueryParameters.get('url');
-    const id = currentQueryParameters.get('id');
-    if (url && id) {
-      setSelectedImage({
-        id,
-        url: decodeURIComponent(url)
-      });
-    }
-
-    // no need to run every time the query params change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ ]);
+  useSetImageInfoFromUrl(selectImage);
 
   // Inside useMemo to avoid children rerender when the selected image changes
   const SingleCats = useMemo(() => {
@@ -71,40 +48,42 @@ const CatImages: React.FC = function () {
             return (
               <SingleCat
                 key={ cat.id }
-                id={ cat.id }
-                url={ cat.url }
+                { ...cat }
                 favouriteId={ favouriteCats?.[cat.id]?.id }
                 selectImage={ selectImage }
                 className='mb-4'
+                favouriteCatsLoading={ favouriteCatsLoading }
               />
             );
           })
         }
       </>
     );
-  }, [ cats, favouriteCats, selectImage ]);
-
-  if (catsLoading || !cats) {
-    return null;
-  }
+  }, [ cats, favouriteCats, favouriteCatsLoading, selectImage ]);
 
   return (
     <>
       {
         selectedImage && (
           <CatImageModal
+            image={ selectedImage }
             open={ selectedImage !== undefined }
             handleClose={ deselectImage }
-            id={ selectedImage.id }
-            url={ selectedImage.url }
             favouriteId={ favouriteCats?.[selectedImage.id]?.id }
+            favouriteCatsLoading={ favouriteCatsLoading }
           />
         )
       }
 
-      <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4 pb-8'>
-        { SingleCats }
-      </div>
+      {
+        catsLoading ? (
+          <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
+        ) : (
+          <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4 pb-8'>
+            { SingleCats }
+          </div>
+        )
+      }
 
       <LoadingButton
         loading={ moreImagesLoading }

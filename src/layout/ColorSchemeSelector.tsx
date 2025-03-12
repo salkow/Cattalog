@@ -1,5 +1,5 @@
 import React from 'react';
-import { toggleColorScheme } from '../utilities/toggleColorScheme';
+import { toggleColorScheme } from '../utilities/utils';
 
 const ColorSchemeSelector: React.FC = function () {
   return (

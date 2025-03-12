@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@import "swiper/css";
+@import "swiper/css/navigation";
+
 @theme {
   --color-navbar-dark: #0a1929;
   --color-navbar: #2196F3;
@@ -9,3 +12,25 @@
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* .swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */

@@ -1,31 +1,61 @@
-import { useQuery } from '@tanstack/react-query';
-import React from 'react';
-import { request } from '../../utilities/apiClient';
-import { Breed } from '../../types/cat-types';
+import React, { useCallback, useState } from 'react';
+import type { SelectedBreed } from '../../types/cat-types';
 import SingleBreed from './SingleBreed';
+import CatBreedModal from './CatBreedModal';
+import Spinner from '../../components/Spinner';
+import { useGetCatBreeds, useSetBreedInfoFromUrl } from './hooks';
+import { useSearchParams } from 'react-router';
 
 const CatImages: React.FC = function () {
-  const { data: breeds, isLoading: breedsLoading } = useQuery({
-    queryKey: [ 'breeds' ],
-    queryFn: () => {
-      return request.get<Breed[]>('breeds');
-    }
-  });
+  const { data: breeds, isLoading: breedsLoading } = useGetCatBreeds();
 
-  if (breedsLoading || !breeds) {
-    return null;
-  }
+  const [ _, setSearchParams ] = useSearchParams();
+
+  const [ selectedBreed, setSelectedBreed ] = useState<SelectedBreed | undefined>();
+
+  const selectBreed = useCallback((cat: SelectedBreed): void => {
+    setSelectedBreed(cat);
+  }, []);
+
+  const deselectBreed = useCallback((): void => {
+    setSearchParams({});
+    setSelectedBreed(undefined);
+  }, [ setSearchParams ]);
+
+  useSetBreedInfoFromUrl(selectBreed);
 
   return (
-    <div className='columns-1 sm:columns-2 lg:columns-3 gap-4 row-gap-4'>
+    <>
       {
-        breeds.map((breed) => {
-          return (
-            <SingleBreed key={ breed.id } { ...breed } />
-          );
-        })
+        selectedBreed && (
+          <CatBreedModal
+            open={ selectBreed !== undefined }
+            handleClose={ deselectBreed }
+            breed={ selectedBreed }
+          />
+        )
       }
-    </div>
+
+      {
+        breedsLoading ? (
+          <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
+        ) : (
+          <div className='columns-1 sm:columns-2 lg:columns-3 gap-4 row-gap-4'>
+            {
+              breeds?.map((breed) => {
+                return (
+                  <SingleBreed
+                    key={ breed.id }
+                    { ...breed }
+                    selectBreed={ selectBreed }
+                  />
+                );
+              })
+            }
+          </div>
+        )
+      }
+    </>
   );
 };
 

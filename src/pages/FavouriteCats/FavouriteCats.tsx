@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import SingleCat from '../CatImages/SingleCat';
 import { useGetFavouriteCats } from './hooks';
 import { SelectedImage } from '../../types/cat-types';
-import CatImageModal from '../../components/CatImageModal';
+import CatImageModal from '../CatImages/CatImageModal';
+import Spinner from '../../components/Spinner';
+import { useSetImageInfoFromUrl } from '../../utilities/hooks';
 import { useSearchParams } from 'react-router';
 
 const FavoriteCats: React.FC = function () {
-
   const { data: favouriteCats, isLoading: favouriteCatsLoading } = useGetFavouriteCats();
+
+  const [ _, setSearchParams ] = useSearchParams();
 
   const [ selectedImage, setSelectedImage ] = useState<SelectedImage | undefined>();
 
@@ -16,24 +19,11 @@ const FavoriteCats: React.FC = function () {
   }, []);
 
   const deselectImage = useCallback((): void => {
+    setSearchParams({});
     setSelectedImage(undefined);
-  }, []);
+  }, [ setSearchParams ]);
 
-
-  const [ currentQueryParameters ] = useSearchParams();
-  useEffect(() => {
-    const url = currentQueryParameters.get('url');
-    const id = currentQueryParameters.get('id');
-    if (url && id) {
-      setSelectedImage({
-        id,
-        url: decodeURIComponent(url)
-      });
-    }
-
-    // no need to run every time the query params change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ ]);
+  useSetImageInfoFromUrl(selectImage);
 
   // Inside useMemo to avoid children rerender when the selected image changes
   const SingleCats = useMemo(() => {
@@ -48,11 +38,11 @@ const FavoriteCats: React.FC = function () {
             return (
               <SingleCat
                 key={ cat.id }
-                id={ cat.image.id }
-                url={ cat.image.url }
+                { ...cat.image }
                 favouriteId={ cat.id }
                 selectImage={ selectImage }
                 className='mb-4'
+                favouriteCatsLoading={ false } // we already know the cats are loaded
               />
             );
           })
@@ -61,10 +51,6 @@ const FavoriteCats: React.FC = function () {
     );
   }, [ favouriteCats, selectImage ]);
 
-  if (favouriteCatsLoading || !favouriteCats) {
-    return null;
-  }
-
   return (
     <>
       {
@@ -72,16 +58,23 @@ const FavoriteCats: React.FC = function () {
           <CatImageModal
             open={ selectedImage !== undefined }
             handleClose={ deselectImage }
-            id={ selectedImage.id }
-            url={ selectedImage.url }
+            image={ selectedImage }
             favouriteId={ favouriteCats?.[selectedImage.id]?.id }
+            favouriteCatsLoading={ favouriteCatsLoading }
           />
         )
       }
 
-      <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4'>
-        { SingleCats }
-      </div>
+      {
+        favouriteCatsLoading ? (
+          <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
+        ) : (
+          <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4'>
+            { SingleCats }
+          </div>
+        )
+      }
+
     </>
 
   );

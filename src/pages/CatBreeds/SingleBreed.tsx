@@ -1,17 +1,24 @@
 import React from 'react';
-import { Breed } from '../../types/cat-types';
+import type { CatBreed, SelectedBreed } from '../../types/cat-types';
 
-const SingleBreed: React.FC<Breed> = function ({ image, name ,description }) {
+interface ISingleBreedProps extends CatBreed {
+  selectBreed: (cat: SelectedBreed) => void
+}
+
+const SingleBreed: React.FC<ISingleBreedProps> = function ({ selectBreed, ...breed }) {
   return (
-    <div className='rounded-xl dark:bg-gray-800 dark:border-gray-700 mb-4 shadow-lg break-inside-avoid'>
+    <div
+      // Comes from cat breeds so it has all the info
+      onClick={ () => { selectBreed({ ...breed, hasAllInfo: true });} }
+      className='rounded-xl dark:bg-gray-800 dark:border-gray-700 mb-4 shadow-lg break-inside-avoid cursor-pointer'>
       {
-        image?.url && (
-          <img className='rounded-t-xl' src={ image.url } alt={ name } />
+        breed.image?.url && (
+          <img className='rounded-t-xl' src={ breed.image.url } alt={ breed.name } />
         )
       }
       <div className='p-5'>
-        <h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>{name}</h5>
-        <p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>{description}</p>
+        <h5 className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white'>{breed.name}</h5>
+        <p className='mb-3 line-clamp-3 font-normal text-gray-700 dark:text-gray-400'>{breed.description}</p>
       </div>
     </div>
   );
