@@ -10,7 +10,7 @@ const SingleBreed: React.FC<ISingleBreedProps> = function ({ selectBreed, ...bre
     <div
       // Comes from cat breeds so it has all the info
       onClick={ () => { selectBreed({ ...breed, hasAllInfo: true });} }
-      className='rounded-xl dark:bg-gray-800 dark:border-gray-700 mb-4 shadow-lg break-inside-avoid cursor-pointer'>
+      className='rounded-xl dark:bg-gray-800 dark:border-gray-700 shadow-lg break-inside-avoid cursor-pointer'>
       {
         breed.image?.url && (
           <img className='rounded-t-xl' src={ breed.image.url } alt={ breed.name } />

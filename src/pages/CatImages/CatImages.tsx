@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import SingleCat from './SingleCat';
+import { Masonry, RenderComponentProps } from 'masonic';
 import type { CatImage, SelectedImage } from '../../types/cat-types';
 import { useGetFavouriteCats } from '../FavouriteCats/hooks';
 import LoadingButton from '../../components/LoadingButton';
@@ -39,27 +40,21 @@ const CatImages: React.FC = function () {
 
   useSetImageInfoFromUrl(selectImage);
 
-  // Inside useMemo to avoid children rerender when the selected image changes
-  const SingleCats = useMemo(() => {
+  const SingleCatRenderer = useCallback((props: RenderComponentProps<CatImage>) => {
+    const cat = props.data;
     return (
-      <>
-        {
-          cats?.map((cat) => {
-            return (
-              <SingleCat
-                key={ cat.id }
-                { ...cat }
-                favouriteId={ favouriteCats?.[cat.id]?.id }
-                selectImage={ selectImage }
-                className='mb-4'
-                favouriteCatsLoading={ favouriteCatsLoading }
-              />
-            );
-          })
-        }
-      </>
+      <SingleCat
+        { ...cat }
+        favouriteId={ favouriteCats?.[cat.id]?.id }
+        selectImage={ selectImage }
+        width={ props.width }
+        originalHeight={ props.data.height }
+        originalWidth={ props.data.width }
+        favouriteCatsLoading={ favouriteCatsLoading }
+      />
     );
-  }, [ cats, favouriteCats, favouriteCatsLoading, selectImage ]);
+  }, [ favouriteCats, favouriteCatsLoading, selectImage ]);
+
 
   return (
     <>
@@ -76,12 +71,17 @@ const CatImages: React.FC = function () {
       }
 
       {
-        catsLoading ? (
+        catsLoading || !cats ? (
           <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
         ) : (
-          <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4 pb-8'>
-            { SingleCats }
-          </div>
+          <Masonry
+            items={ cats }
+            columnGutter={ 16 }
+            columnWidth={ 400 }
+            maxColumnCount={ 3 }
+            itemKey={ (item) => {return item.id;} }
+            render={ SingleCatRenderer }
+          />
         )
       }
 

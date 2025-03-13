@@ -1,11 +1,13 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import SingleCat from '../CatImages/SingleCat';
 import { useGetFavouriteCats } from './hooks';
-import { SelectedImage } from '../../types/cat-types';
+import { FavouriteCat, SelectedImage } from '../../types/cat-types';
 import CatImageModal from '../CatImages/CatImageModal';
 import Spinner from '../../components/Spinner';
 import { useSetImageInfoFromUrl } from '../../utilities/hooks';
 import { useSearchParams } from 'react-router';
+import { RenderComponentProps, usePositioner, useResizeObserver, useContainerPosition, MasonryScroller } from 'masonic';
+import { useWindowSize } from '@react-hook/window-size';
 
 const FavoriteCats: React.FC = function () {
   const { data: favouriteCats, isLoading: favouriteCatsLoading } = useGetFavouriteCats();
@@ -25,31 +27,34 @@ const FavoriteCats: React.FC = function () {
 
   useSetImageInfoFromUrl(selectImage);
 
-  // Inside useMemo to avoid children rerender when the selected image changes
-  const SingleCats = useMemo(() => {
-    if (!favouriteCats) {
-      return null;
-    }
+  const favouriteCatsArr = useMemo(() => {
+    return Object.values(favouriteCats ?? []);
+  }, [ favouriteCats ]);
 
+  const containerRef = React.useRef(null);
+  const [ windowWidth, windowHeight ] = useWindowSize();
+  const { offset, width } = useContainerPosition(containerRef, [
+    windowWidth,
+    windowHeight,
+  ]);
+
+  const positioner = usePositioner(
+    { width, columnWidth: 400, columnGutter: 16, maxColumnCount: 3 },
+    [ favouriteCatsArr ]
+  );
+
+  const resizeObserver = useResizeObserver(positioner);
+
+  const SingleCatRenderer = useCallback((props: RenderComponentProps<FavouriteCat>) => {
     return (
-      <>
-        {
-          Object.values(favouriteCats).map((cat) => {
-            return (
-              <SingleCat
-                key={ cat.id }
-                { ...cat.image }
-                favouriteId={ cat.id }
-                selectImage={ selectImage }
-                className='mb-4'
-                favouriteCatsLoading={ false } // we already know the cats are loaded
-              />
-            );
-          })
-        }
-      </>
+      <SingleCat
+        { ...props.data.image }
+        favouriteId={ props.data.id }
+        selectImage={ selectImage }
+        favouriteCatsLoading={ false } // we already know the cats are loaded
+      />
     );
-  }, [ favouriteCats, selectImage ]);
+  }, [ selectImage ]);
 
   return (
     <>
@@ -66,17 +71,23 @@ const FavoriteCats: React.FC = function () {
       }
 
       {
-        favouriteCatsLoading ? (
+        favouriteCatsLoading && (
           <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
-        ) : (
-          <div className='columns-1 sm:columns-2 md:columns-3 gap-4 row-gap-4'>
-            { SingleCats }
-          </div>
         )
       }
 
+      <MasonryScroller
+        className={ favouriteCatsLoading ? 'invisible' : '' }
+        items={ favouriteCatsArr }
+        resizeObserver={ resizeObserver }
+        offset={ offset }
+        itemKey={ (item: FavouriteCat) => { return item.id; } }
+        containerRef={ containerRef }
+        render={ SingleCatRenderer }
+        positioner={ positioner }
+        height={ windowHeight }
+      />
     </>
-
   );
 };
 

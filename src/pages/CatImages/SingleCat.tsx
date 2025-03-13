@@ -10,7 +10,10 @@ interface ISingleCatProps {
   id: CatImage['id']
   url: CatImage['url']
   breeds?: CatImage['breeds']
-  className?: React.HTMLProps<HTMLElement>['className'];
+
+  width?: number
+  originalHeight?: number
+  originalWidth?: number
 
   // No need to block the rendering while the favourites are loading.
   // We just hide the favourite button.
@@ -18,7 +21,7 @@ interface ISingleCatProps {
 }
 
 const SingleCat: React.FC<ISingleCatProps> = function ({ selectImage, favouriteId, id, url,
-  className, breeds, favouriteCatsLoading }) {
+  breeds, favouriteCatsLoading, width, originalHeight, originalWidth }) {
   const removeFavouriteCat = useRemoveFromFavourites();
   const makeFavourite = useAddToFavourites();
 
@@ -31,8 +34,16 @@ const SingleCat: React.FC<ISingleCatProps> = function ({ selectImage, favouriteI
     }
   };
 
+  const imgStyle: React.CSSProperties = { };
+  if (originalHeight && originalWidth && width) {
+    const aspectRatio = originalWidth / originalHeight;
+    const newHeight = width / aspectRatio;
+
+    imgStyle.height = `${ newHeight }px`;
+  }
+
   return (
-    <form className={ `relative ${ className ?? '' }` } onSubmit={ handleSubmit }>
+    <form className={ 'relative' } onSubmit={ handleSubmit }>
       {
         !favouriteCatsLoading && (
           <button
@@ -52,6 +63,7 @@ const SingleCat: React.FC<ISingleCatProps> = function ({ selectImage, favouriteI
       <img
         src={ url }
         alt={ url }
+        style={ imgStyle }
         className='w-full h-full rounded-xl outline-stone-500/50 outline shadow-lg cursor-pointer max-h-[calc(100vh-5vh)]'
         onClick={ () => { selectImage?.({ id, url, breeds, hasAllInfo: !!breeds });} }
       />
