@@ -74,25 +74,27 @@ const CatImages: React.FC = function () {
         catsLoading || !cats ? (
           <Spinner className='size-[40px] text-white fixed left-[50%] top-[50%] -translate-1/2'/>
         ) : (
-          <Masonry
-            items={ cats }
-            columnGutter={ 16 }
-            columnWidth={ 400 }
-            maxColumnCount={ 3 }
-            itemKey={ (item) => {return item.id;} }
-            render={ SingleCatRenderer }
-          />
+          <>
+            <Masonry
+              items={ cats }
+              columnGutter={ 16 }
+              columnWidth={ 400 }
+              maxColumnCount={ 3 }
+              itemKey={ (item) => {return item.id;} }
+              render={ SingleCatRenderer }
+            />
+
+            <LoadingButton
+              loading={ moreImagesLoading }
+              onClick={ loadMoreImages }
+              className='relative bottom-4 -translate-x-1/2 left-1/2 z-4 mt-4'
+              startIcon={ <img src='/plus.svg' alt='plus' /> }
+            >
+            Load more
+            </LoadingButton>
+          </>
         )
       }
-
-      <LoadingButton
-        loading={ moreImagesLoading }
-        onClick={ loadMoreImages }
-        className='relative bottom-4 -translate-x-1/2 left-1/2'
-        startIcon={ <img src='/plus.svg' alt='plus' /> }
-      >
-        Load more
-      </LoadingButton>
     </>
   );
 };

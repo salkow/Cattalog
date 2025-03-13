@@ -11,6 +11,8 @@ import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
 import importPlugin from 'eslint-plugin-import';
+import css from '@eslint/css';
+import { tailwindSyntax } from '@eslint/css/syntax';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -30,7 +32,7 @@ export default [ ...compat.extends(
     'react-hooks': fixupPluginRules(reactHooks),
     promise,
     'react-refresh': reactRefresh,
-    import: importPlugin
+    import: importPlugin,
   },
 
   languageOptions: {
@@ -217,4 +219,18 @@ export default [ ...compat.extends(
     'template-curly-spacing': [ 'error', 'always' ],
     yoda: [ 'error', 'never' ],
   },
-}];
+},
+{
+  files: [ '**/*.css' ],
+  plugins: {
+    css,
+  },
+  language: 'css/css',
+  languageOptions: {
+    customSyntax: tailwindSyntax,
+  },
+  rules: {
+    'css/no-empty-blocks': 'error',
+  },
+},
+];
