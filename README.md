@@ -1,21 +1,31 @@
 # GlobalWebIndex Engineering Challenge
 
-## Exercise: CatLover
+## Installation
 
-Create a React application for cat lovers which is going to build upon thecatapi.com and will have 3 views.
-The **first** view displays a list of 10 random cat images and a button to load more. Clicking on any of those images opens a modal view with the image and the information about the cat’s breed if available. This would be a link to the second view below - the breed detail. The modal should also contain a form to mark the image as your favourite (a part of the third view as well). Make sure you can copy-paste the URL of the modal and send it to your friends - they should see the same image as you can see.
+### Docker Setup
+This application requires Docker to run in a containerized environment. 
+To get started, ensure Docker is installed on your system. After cloning the repository, create a .env file in the root directory with the following contents:
 
-The **second** view displays a list of cat breeds. Each breed opens a modal again with a list of cat images of that breed. Each of those images must be a link to the image detail from the previous point.
+```
+VITE_API_KEY=<your_cat_api_key_here>  
+VITE_BASE_URL=https://api.thecatapi.com/v1/  
+VITE_USERNAME=<your_username_here>  
+```
 
-The **third** view allows you do the following things:
+Replace <your_cat_api_key_here> with your API key from The Cat API and <your_username_here> with your preferred username. Once configured, run the app using:
+```
+docker compose up --build -d  
+```
+This command will build and start the application in detached mode. The app will be accessible at 
+```http://localhost:3000```
 
-- Display your favourite cats
-- Remove an image from your favourites (use any UX option you like)
+### Technologies Used
+- **Vite**: Bootstrapped the project with Vite 
+- **React Query**: Utilized for efficient data fetching, caching, and synchronization.
+- **Masonic Library**: Used the Masonic to display images in a dynamic, responsive masonry grid layout. Virtualization ensures only visible images are rendered, reducing memory usage and improving performance.  
+- **Tailwind CSS**: Handled styling with tailwind.  
+- **React Router**: Used for managed client-side routing.
+- **Eslint**: Configured for code quality enforcement, ensuring consistent formatting and adherence to React best practices.
+- **Husky**: Used for performing typescript and eslint tests before commiting the code. 
 
-You can find the API documentation here: https://developers.thecatapi.com/
-We give you a lot of freedom in technologies and ways of doing things. We only insist on you using React.js. Get creative as much as you want, we WILL appreciate it. You will not be evaluated based on how well you follow these instructions, but based on how sensible your solution will be. In case you are not able to implement something you would normally implement for time reasons, make it clear with a comment.
-
-## Submission
-
-Once you have built your app, share your code in the mean suits you best
-Good luck, potential colleague!
+### 
