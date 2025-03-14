@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 
 const getCatImage = (): Promise<CatImage[]> => {
   // No need to include categories since we don't display them.
-  return request.get<CatImage[]>('images/search?limit=30&include_categories=0');
+  return request.get<CatImage[]>('images/search?limit=10&include_categories=0');
 };
 
 export const useGetCatImages = (): UseQueryResult<CatImage[], Error> => {

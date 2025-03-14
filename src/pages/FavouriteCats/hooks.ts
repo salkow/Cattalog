@@ -50,7 +50,7 @@ export const useAddToFavourites = (): AddToFavouritesMutation => {
   const createFavourite = (id: number, imageId: string, url: string): FavouriteCat => {
     return {
       id,
-      user_id: import.meta.env.USERNAME,
+      user_id: import.meta.env.VITE_USERNAME,
       image_id: imageId,
       sub_id: '',
       created_at: '',
